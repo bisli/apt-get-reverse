@@ -42,7 +42,7 @@ def logParser(command):
 
 
 
-def main(timeInHours):
+def main(timeInHours, dryrun_toggle):
 
     lower_bound_time = datetime.datetime.now() - datetime.timedelta(hours = int(timeInHours))
     logfile = open(LOG_FILE_PATH, 'r')  #accepts the 2nd parameter as the input for parsing.
