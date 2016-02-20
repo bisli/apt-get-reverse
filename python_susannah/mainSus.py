@@ -37,13 +37,15 @@ def logParser():
                     for i in range(startLineNumber+1, endLineNumber):
                         command = lines[i].split(':')[0]
                         if command in ('Install','Purge','Remove'):
+                            packages = filter(lambda x: ", automatic" not in x, lines[i].split(": ")[1].split("), "))
+                            packages = map(lambda x: re.sub(r'\(.*', '', x), packages)
                             startDatetime_str = lines[startLineNumber].split(' ')[1] + ' ' + lines[startLineNumber].split(' ')[3][:-1]
                             startDatetime = dt.datetime.strptime(startDatetime_str, '%Y-%m-%d %H:%M:%S')
-                            program = lines[i].split(' ')[1]
-
-                            commands.append(command)
-                            programs.append(program)
-                            startDatetimes.append(startDatetime)
+                            #program = lines[i].split(' ')[1]
+                            for program in packages:
+                                commands.append(command)
+                                programs.append(program)
+                                startDatetimes.append(startDatetime)
 
                 else:
                     # No data in this set, so try the next.
