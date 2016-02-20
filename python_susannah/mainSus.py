@@ -71,10 +71,8 @@ def convertCommands(commands):
 def main(timeInHours):
 
     (commands,programs,startDatetimes) = logParser()
-    print(commands)
     # Convert commands to their negatives to be executed
     (commands) = convertCommands(commands)
-    print(commands)
 
     datetimeToGoBackTo = dt.datetime.now() - dt.timedelta(hours = float(timeInHours))
 
@@ -89,10 +87,10 @@ def main(timeInHours):
 
     for i in range(0, len(commands_inDateRange)):
         print("%sing %s" % (commands[i], programs[i]))
-        subprocess.call("sudo", "apt-get", "%s" % commands[i], "%s" % programs[i])
+        #subprocess.call("sudo", "apt-get", "%s" % commands[i], "%s" % programs[i])
 
-    subprocess.call("sudo", "apt-get", "autoclean")
-    subprocess.call("sudo", "apt-get", "clean")
+    #subprocess.call("sudo", "apt-get", "autoclean")
+    #subprocess.call("sudo", "apt-get", "clean")
     
 
 # Create a parser to take in STDIN arguments
