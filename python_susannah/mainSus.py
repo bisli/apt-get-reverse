@@ -4,10 +4,12 @@ import argparse
 import subprocess
 import datetime as dt
 import pdb
+import re
+import os
 
 
-# LOG_FILE_PATH = '/var/log/apt/history.log'
-LOG_FILE_PATH = 'susLog.log'
+LOG_FILE_PATH = '/var/log/apt/history.log'
+#LOG_FILE_PATH = 'susLog.log'
 
 
 
@@ -79,14 +81,12 @@ def main(timeInHours):
     (commands) = convertCommands(commands)
 
     datetimeToGoBackTo = dt.datetime.now() - dt.timedelta(hours = float(timeInHours))
-    print("datetimeToGoBackTo: %s" % datetimeToGoBackTo)
-    print("timeInHours: %s" % float(timeInHours))
-
 
     for i in range(0, len(startDatetimes)):
         if startDatetimes[i] > datetimeToGoBackTo:
-            print("%sing %s" % (commands[i], programs[i]))
+            print ' '.join(["sudo", "apt-get", "%s" % commands[i], "%s" % programs[i]])
             #subprocess.call(["sudo", "apt-get", "%s" % commands[i], "%s" % programs[i]])
+            os.system(' '.join(["sudo", "apt-get", "%s" % commands[i], "%s" % programs[i]]))
 
     #subprocess.call(["sudo", "apt-get", "autoclean"])
     #subprocess.call(["sudo", "apt-get", "clean"])
