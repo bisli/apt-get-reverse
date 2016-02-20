@@ -30,6 +30,9 @@ def logParser(command):
 
     fields = command.split("\n")
 
+    if len(fields) < 3:
+        return None
+
     time = datetime.datetime.strptime(fields[0].split(": ")[1], "%Y-%m-%d %H:%M:%S")
     commandType = fields[2].split(": ")[0]
     packages = filter(lambda x: ", automatic" not in x, fields[2].split(": ")[1].split("), "))
