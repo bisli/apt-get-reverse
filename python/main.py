@@ -13,6 +13,13 @@ import pdb
 
 LOG_FILE_PATH = '/var/log/apt/history.log'
 
+def comStructToCommand(com_struct):
+    if com_struct.Type == "Install":
+        return "sudo apt-get purge " + ' '.join(com_struct.Packages)
+    elif com_struct.Type == "Remove" or com_struct.Type == "Purge":
+        return "sudo apt-get install " + ' '.join(com_struct.Packages)
+    else:
+        return ""
 
 def logParser(command):
 
@@ -39,6 +46,11 @@ def main(timeInHours):
     commands = logfile.read()[1:].split("\n\n")
     command_structs = filter(lambda x: x != None, map(logParser, commands))
     command_structs = filter(lambda x: x.StartDate > lower_bound_time, command_structs)
+    commands = map(comStructToCommand, command_structs)
+    print "Commands to run:"
+    for command in commands:
+        print "  " + command
+    #pdb.set_trace()
 
 
 # Set the logging level
