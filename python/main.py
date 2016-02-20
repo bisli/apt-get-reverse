@@ -1,1 +1,57 @@
-# /var/log/apt/history.log
+#!/usr/bin/env python
+
+import argparse
+import logging
+import subprocess
+from sys import argv
+from collections import namedtuple
+import fileinput
+import re
+import datetime
+import pdb
+
+
+LOG_FILE_PATH = '/var/log/apt/history.log'
+
+
+def logParser(command):
+
+    ComStruct = namedtuple("ComStruct", "StartDate Type Packages")
+
+    if ("Upgrade: " in command):
+        return None
+
+    fields = command.split("\n")
+
+    time = datetime.datetime.strptime(fields[0].split(": ")[1], "%Y-%m-%d %H:%M:%S")
+    commandType = fields[2].split(": ")[0]
+    packages = filter(lambda x: ", automatic" not in x, fields[2].split(": ")[1].split("), "))
+    packages = map(lambda x: re.sub(r'\(.*', '', x), packages)
+
+    return ComStruct(StartDate = time, Type = commandType, Packages = packages)
+
+
+
+def main(timeInHours):
+    logging.info("Entering into main().")
+    lower_bound_time = datetime.datetime.now() - datetime.timedelta(hours = int(timeInHours))
+    logfile = open(LOG_FILE_PATH, 'r')  #accepts the 2nd parameter as the input for parsing.
+    commands = logfile.read()[1:].split("\n\n")
+    command_structs = filter(lambda x: x != None, map(logParser, commands))
+    command_structs = filter(lambda x: x.StartDate > lower_bound_time, command_structs)
+
+
+# Set the logging level
+logging.basicConfig(level=logging.DEBUG)
+
+# Create a parser to take in STDIN arguments
+parser = argparse.ArgumentParser()
+
+# Add the time argument
+parser.add_argument("timeInHours")
+
+# Put the arguments of the parser into the var args
+args = parser.parse_args()
+
+if __name__ == "__main__":
+    main(args.timeInHours)
