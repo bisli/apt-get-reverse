@@ -41,7 +41,7 @@ def logParser():
                             startDatetime = dt.datetime.strptime(startDatetime_str, '%Y-%m-%d %H:%M:%S')
                             program = lines[i].split(' ')[1]
 
-                            print command, program, startDatetime
+                            #print command, program, startDatetime
                             commands.append(command)
                             programs.append(program)
                             startDatetimes.append(startDatetime)
@@ -78,22 +78,18 @@ def main(timeInHours):
     (commands) = convertCommands(commands)
 
     datetimeToGoBackTo = dt.datetime.now() - dt.timedelta(hours = float(timeInHours))
+    print("datetimeToGoBackTo: %s" % datetimeToGoBackTo)
+    print("timeInHours: %s" % float(timeInHours))
 
-    diffs = []
+
     for i in range(0, len(startDatetimes)):
-        diffs.append(abs(datetimeToGoBackTo - startDatetimes[i]))
+        if startDatetimes[i] > datetimeToGoBackTo:
+            print("%sing %s" % (commands[i], programs[i]))
+            #subprocess.call(["sudo", "apt-get", "%s" % commands[i], "%s" % programs[i]])
 
-    index_closestDate = diffs.index(min(diffs))
+    #subprocess.call(["sudo", "apt-get", "autoclean"])
+    #subprocess.call(["sudo", "apt-get", "clean"])
 
-    commands_inDateRange = commands[index_closestDate:]
-    programs_inDateRange = programs[index_closestDate:]
-
-    for i in range(0, len(commands_inDateRange)):
-        print("%sing %s" % (commands_inDateRange[i], programs_inDateRange[i]))
-        subprocess.call(["sudo", "apt-get", "%s" % commands[i], "%s" % programs[i]])
-
-    subprocess.call(["sudo", "apt-get", "autoclean"])
-    subprocess.call(["sudo", "apt-get", "clean"])
     
 
 # Create a parser to take in STDIN arguments
