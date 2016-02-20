@@ -41,6 +41,7 @@ def logParser():
                             startDatetime = dt.datetime.strptime(startDatetime_str, '%Y-%m-%d %H:%M:%S')
                             program = lines[i].split(' ')[1]
 
+                            print command, program, startDatetime
                             commands.append(command)
                             programs.append(program)
                             startDatetimes.append(startDatetime)
@@ -59,11 +60,11 @@ def convertCommands(commands):
         command = commands[i]
 
         if command == 'Install':
-            command = 'Purge'
+            command = 'purge'
         elif command == 'Purge':
-            command = 'Install'
+            command = 'install'
         elif command == 'Remove':
-            command = 'Install'
+            command = 'install'
 
         commands[i] = command
 
@@ -83,16 +84,16 @@ def main(timeInHours):
         diffs.append(abs(datetimeToGoBackTo - startDatetimes[i]))
 
     index_closestDate = diffs.index(min(diffs))
-    
+
     commands_inDateRange = commands[index_closestDate:]
     programs_inDateRange = programs[index_closestDate:]
 
     for i in range(0, len(commands_inDateRange)):
         print("%sing %s" % (commands_inDateRange[i], programs_inDateRange[i]))
-        #subprocess.call("sudo", "apt-get", "%s" % commands[i], "%s" % programs[i])
+        subprocess.call(["sudo", "apt-get", "%s" % commands[i], "%s" % programs[i]])
 
-    #subprocess.call("sudo", "apt-get", "autoclean")
-    #subprocess.call("sudo", "apt-get", "clean")
+    subprocess.call(["sudo", "apt-get", "autoclean"])
+    subprocess.call(["sudo", "apt-get", "clean"])
     
 
 # Create a parser to take in STDIN arguments
