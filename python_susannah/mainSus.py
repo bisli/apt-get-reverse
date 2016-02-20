@@ -6,7 +6,9 @@ import datetime as dt
 import pdb
 
 
-LOG_FILE_PATH = '/var/log/apt/history.log'
+# LOG_FILE_PATH = '/var/log/apt/history.log'
+LOG_FILE_PATH = 'susLog.log'
+
 
 
 def logParser():
@@ -81,12 +83,12 @@ def main(timeInHours):
         diffs.append(abs(datetimeToGoBackTo - startDatetimes[i]))
 
     index_closestDate = diffs.index(min(diffs))
-
+    
     commands_inDateRange = commands[index_closestDate:]
     programs_inDateRange = programs[index_closestDate:]
 
     for i in range(0, len(commands_inDateRange)):
-        print("%sing %s" % (commands[i], programs[i]))
+        print("%sing %s" % (commands_inDateRange[i], programs_inDateRange[i]))
         #subprocess.call("sudo", "apt-get", "%s" % commands[i], "%s" % programs[i])
 
     #subprocess.call("sudo", "apt-get", "autoclean")
