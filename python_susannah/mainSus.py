@@ -81,7 +81,6 @@ def main(timeInHours):
     for i in range(0, len(startDatetimes)):
         diffs.append(abs(datetimeToGoBackTo - startDatetimes[i]))
 
-    pdb.set_trace()
     index_closestDate = diffs.index(min(diffs))
 
     commands_inDateRange = commands[index_closestDate:]
@@ -89,7 +88,7 @@ def main(timeInHours):
 
     for i in range(0, len(commands_inDateRange)):
         print("%sing %s" % (commands[i], programs[i]))
-        subprocess.call("sudo", "apt-get", "%s" % commands[i], "%s" % programs[i])
+        #subprocess.call("sudo", "apt-get", "%s" % commands[i], "%s" % programs[i])
     
 
 # Create a parser to take in STDIN arguments
