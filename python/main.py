@@ -43,30 +43,32 @@ def logParser(command):
 
 
 def main(timeInHours):
-    logging.info("Entering into main().")
+
     lower_bound_time = datetime.datetime.now() - datetime.timedelta(hours = int(timeInHours))
     logfile = open(LOG_FILE_PATH, 'r')  #accepts the 2nd parameter as the input for parsing.
     commands = logfile.read()[1:].split("\n\n")
     command_structs = filter(lambda x: x != None, map(logParser, commands))
     command_structs = filter(lambda x: x.StartDate > lower_bound_time, command_structs)
     commands = map(comStructToCommand, command_structs)
-    print "Commands to run:"
-    for command in commands:
-        print "  " + command
-    #pdb.set_trace()
 
+    if dryrun_toggle:
+        print "Commands to run:"
+        for command in commands:
+            print "  " + command.strip()
+    else:
+        for command in commands:
+            subprocess.call(command.strip().split(' '))
 
-# Set the logging level
-logging.basicConfig(level=logging.DEBUG)
 
 # Create a parser to take in STDIN arguments
 parser = argparse.ArgumentParser()
 
 # Add the time argument
 parser.add_argument("timeInHours")
+parser.add_argument("-d", action="store_true") # dry run toggle 
 
 # Put the arguments of the parser into the var args
 args = parser.parse_args()
 
 if __name__ == "__main__":
-    main(args.timeInHours)
+    main(args.timeInHours, args.d)
