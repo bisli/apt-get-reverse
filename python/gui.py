@@ -1,11 +1,11 @@
 #! /usr/bin/env python3
 
 import locale
-import pdb
 import agr as main
 from dialog import Dialog
 import datetime as dt
 import os
+
 
 
 
@@ -15,7 +15,7 @@ def choiceVec(timeInHours):
     datetimeToGoBackTo = dt.datetime.now() - dt.timedelta(hours = timeInHours)
     for x in range(0, len(commands)):
         if (times[x] > datetimeToGoBackTo):
-            comms.append((packages[x] + "- " +commands[x], '',True))
+            comms.append((packages[x].strip("\n") + "- " +commands[x].strip("\n") , '',True))
     return comms
 
 def convertCommand(command):
@@ -54,16 +54,15 @@ if d.yesno("Are you REALLY sure you want to use this?") == d.DIALOG_OK:
         code, tags = d.checklist("What changes do you want to remove?",
                                  width=65,
                                  choices=comms,
-                                 title="press SPACE to toggle selection?",
+                                 title="press SPACE to toggle selection",
                                  backtitle="teg-tpa")
         if code == d.DIALOG_OK:
             final_apt_commands = []
             for tag in tags:
                 (package, command) = tag.split(" - ")
-                os.system("sudo apt-get " + convertCommand(command) + " " + package)
+                os.system("sudo apt-get -y " + convertCommand(command) + " " + package)
             # 'tags' now contains a list of the toppings chosen by the user
-            #pdb.set_trace()
+            #d.msgbox("Complete!")
             pass
-        tarball = d.yesno("Do you want to back up the /etc/ path?")
-        if tarball == d.DIALOG_OK:
-            print "compressing"
+        else:
+            d.msgbox("No packages modified. Task Cancelled")
