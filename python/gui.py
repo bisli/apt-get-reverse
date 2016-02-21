@@ -2,7 +2,7 @@
 
 import locale
 import pdb
-import main
+import agr as main
 from dialog import Dialog
 import datetime as dt
 import os
