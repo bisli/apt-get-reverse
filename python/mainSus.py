@@ -21,9 +21,9 @@ def logParser():
 
     f=open(LOG_FILE_PATH,'r')
     lines = f.readlines()
-    
+
     for i in range(0, len(lines)):
-        
+
         line = lines[i]
         if line[0] == '\n':
             continue
@@ -91,16 +91,17 @@ def main(timeInHours):
     #subprocess.call(["sudo", "apt-get", "autoclean"])
     #subprocess.call(["sudo", "apt-get", "clean"])
 
-    
 
-# Create a parser to take in STDIN arguments
-parser = argparse.ArgumentParser()
 
-# Add the time argument
-parser.add_argument("timeInHours")
 
-# Put the arguments of the parser into the var args
-args = parser.parse_args()
 
 if __name__ == "__main__":
+    # Create a parser to take in STDIN arguments
+    parser = argparse.ArgumentParser()
+
+    # Add the time argument
+    parser.add_argument("timeInHours")
+
+    # Put the arguments of the parser into the var args
+    args = parser.parse_args()
     main(args.timeInHours)
