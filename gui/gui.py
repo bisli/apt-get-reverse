@@ -1,39 +1,42 @@
-#!/usr/bin/env python
-# encoding: utf-8
+#! /usr/bin/env python3
 
-(RECENTLY_INTALLED, RECENTLY_REMOVED) = getVals()
-
-RECENTLY_INSTALLED = ['Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3','Choice 1', 'Choice 2', 'Choice 3']
-RECENTLY_REMOVED = ['Choice 1', 'Choice 2', 'Choice 3']
-
-import npyscreen
+import locale
 import pdb
-class TestApp(npyscreen.NPSApp):
-    def main(self):
-        Options = npyscreen.OptionList()
+from dialog import Dialog
 
-        # just for convenience so we don't have to keep writing Options.options
-        options = Options.options
+# This is almost always a good thing to do at the beginning of your programs.
+locale.setlocale(locale.LC_ALL, '')
 
-        options.append(npyscreen.OptionMultiChoice('Recently Installed Files to Remove', choices=RECENTLY_INSTALLED))
-        options.append(npyscreen.OptionMultiChoice('Recently Removed Files to Install', choices=RECENTLY_REMOVED))
+# You may want to use 'autowidgetsize=True' here (requires pythondialog >= 3.1)
+d = Dialog(dialog="dialog")
+# Dialog.set_background_title() requires pythondialog 2.13 or later
+d.set_background_title("teg-tpa")
+#commands = ??? (set equal to tuples of every choice)[for checklist]
 
-        try:
-            Options.reload_from_file('/tmp/test')
-    	except:
-        	pass
 
-        F  = npyscreen.Form(name = "Welcome to Npyscreen",)
+# In pythondialog 3.x, you can compare the return code to d.OK, Dialog.OK or
+# "ok" (same object). In pythondialog 2.x, you have to use d.DIALOG_OK, which
+# is deprecated since version 3.0.0.
+if d.yesno("Are you REALLY sure you want to use this?") == d.DIALOG_OK:
 
-        ms = F.add(npyscreen.OptionListDisplay, name="Option List",
-                values = options,
-                scroll_exit=True,
-                max_height=None)
+    time = d.inputbox("Enter how much time you want to go back? (hours)")
+    time = int(time[1])
 
-        F.edit()
 
-        Options.write_to_file('/tmp/test')
 
-if __name__ == "__main__":
-    App = TestApp()
-    App.run()
+    # We could put non-empty items here (not only the tag for each entry)
+    code, tags = d.checklist("What changes do you want to revert?",
+                             choices=[("Catsup", "Removal",  False),
+                                      ("Mustard", "Removal",  False),
+                                      ("Pesto", "Addition",   False),
+                                      ("Mayonnaise", "",  True),
+                                      ("Horse radish","",  True),
+                                      ("Sun-dried tomatoes", "", True)],
+                             title="press SPACE to toggle selection?",
+                             backtitle="teg-tpa")
+    if code == d.DIALOG_OK:
+        # 'tags' now contains a list of the toppings chosen by the user
+        pass
+    tarball = d.yesno("Do you want to back up the /etc/ path?")
+    if tarball == d.DIALOG_OK:
+        print "compressing"
